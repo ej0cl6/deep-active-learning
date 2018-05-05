@@ -6,6 +6,8 @@ import torch.optim as optim
 from torch.utils.data import Dataset, DataLoader
 from PIL import Image
 
+import ipdb
+
 class MyDataset(Dataset):
     def __init__(self, X, Y, transform=None):
         self.X = X
@@ -55,7 +57,7 @@ class Strategy:
         pass
 
     def update(self, idxs_lb):
-        pass
+        self.idxs_lb = idxs_lb
 
     def _train(self, epoch, loader_tr, optimizer):
         self.clf.train()
@@ -94,3 +96,18 @@ class Strategy:
                 P[idxs] = pred
 
         return P
+
+    def predict_prob(self, X, Y):
+        loader_te = DataLoader(MyDataset(X, Y, transform=self.args['transform']),
+                            shuffle=False, **self.args['loader_te_args'])
+
+        self.clf.eval()
+        probs = torch.zeros([len(Y), len(np.unique(Y))])
+        with torch.no_grad():
+            for x, y, idxs in loader_te:
+                x, y = x.to(self.device), y.to(self.device)
+                p = self.clf(x)
+                prob = torch.exp(p)
+                probs[idxs] = prob
+        
+        return probs

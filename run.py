@@ -7,6 +7,9 @@ import torch.optim as optim
 from torch.utils.data import Dataset, DataLoader
 from PIL import Image
 from query_strategies.random_sampling import RandomSampling
+from query_strategies.least_confidence import LeastConfidence
+from query_strategies.margin_sampling import MarginSampling
+from query_strategies.entropy_sampling import EntropySampling
 import ipdb
 
 # parameters
@@ -16,7 +19,7 @@ NUM_INIT_LB = 100
 NUM_QUERY = 100
 NUM_ROUND = 10
 
-NUM_EPOCH = 20
+NUM_EPOCH = 25
 BATCH_SIZE_TR = 10
 BATCH_SIZE_TE = 1000
 NUM_WORKER = 1
@@ -55,6 +58,10 @@ idxs_lb[np.random.randint(0, n_pool, NUM_INIT_LB)] = True
 
 # round 0 accuracy
 strategy = RandomSampling(X_tr, Y_tr, idxs_lb, args)
+# strategy = LeastConfidence(X_tr, Y_tr, idxs_lb, args)
+# strategy = MarginSampling(X_tr, Y_tr, idxs_lb, args)
+# strategy = EntropySampling(X_tr, Y_tr, idxs_lb, args)
+
 strategy.train()
 P = strategy.predict(X_te, Y_te)
 acc = np.zeros(NUM_ROUND+1)

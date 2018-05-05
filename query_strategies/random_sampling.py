@@ -7,6 +7,3 @@ class RandomSampling(Strategy):
 
 	def query(self, n):
 		return np.random.choice(np.where(self.idxs_lb==0)[0], n)
-
-	def update(self, idxs_lb):
-		self.idxs_lb = idxs_lb
