@@ -111,3 +111,22 @@ class Strategy:
                 probs[idxs] = prob
         
         return probs
+
+    def predict_prob_dropout(self, X, Y, n_drop):
+        loader_te = DataLoader(MyDataset(X, Y, transform=self.args['transform']),
+                            shuffle=False, **self.args['loader_te_args'])
+
+        self.clf.train()
+        log_probs = torch.zeros([len(Y), len(np.unique(Y))])
+        for i in range(n_drop):
+            print('n_drop {}/{}'.format(i+1, n_drop))
+            with torch.no_grad():
+                for x, y, idxs in loader_te:
+                    x, y = x.to(self.device), y.to(self.device)
+                    p = self.clf(x)
+                    log_probs[idxs] += p
+        log_probs /= n_drop
+        probs = torch.exp(log_probs)
+        
+        return probs
+

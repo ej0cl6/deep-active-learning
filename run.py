@@ -10,6 +10,11 @@ from query_strategies.random_sampling import RandomSampling
 from query_strategies.least_confidence import LeastConfidence
 from query_strategies.margin_sampling import MarginSampling
 from query_strategies.entropy_sampling import EntropySampling
+from query_strategies.least_confidence_dropout import LeastConfidenceDropout
+from query_strategies.margin_sampling_dropout import MarginSamplingDropout
+from query_strategies.entropy_sampling_dropout import EntropySamplingDropout
+
+
 import ipdb
 
 # parameters
@@ -57,12 +62,16 @@ idxs_lb = np.zeros(n_pool, dtype=bool)
 idxs_lb[np.random.randint(0, n_pool, NUM_INIT_LB)] = True
 
 # round 0 accuracy
-strategy = RandomSampling(X_tr, Y_tr, idxs_lb, args)
+# strategy = RandomSampling(X_tr, Y_tr, idxs_lb, args)
 # strategy = LeastConfidence(X_tr, Y_tr, idxs_lb, args)
 # strategy = MarginSampling(X_tr, Y_tr, idxs_lb, args)
 # strategy = EntropySampling(X_tr, Y_tr, idxs_lb, args)
+strategy = LeastConfidenceDropout(X_tr, Y_tr, idxs_lb, args)
+# strategy = MarginSamplingDropout(X_tr, Y_tr, idxs_lb, args)
+# strategy = EntropySamplingDropout(X_tr, Y_tr, idxs_lb, args)
 
 strategy.train()
+print(type(strategy).__name__)
 P = strategy.predict(X_te, Y_te)
 acc = np.zeros(NUM_ROUND+1)
 acc[0] = 1.0 * (Y_te==P).sum().item() / len(Y_te)
@@ -79,4 +88,5 @@ for rd in range(1, NUM_ROUND+1):
     acc[rd] = 1.0 * (Y_te==P).sum().item() / len(Y_te)
     print('testing accuracy {}'.format(acc[rd]))
 
+print(type(strategy).__name__)
 print(acc)
