@@ -62,11 +62,11 @@ idxs_lb = np.zeros(n_pool, dtype=bool)
 idxs_lb[np.random.randint(0, n_pool, NUM_INIT_LB)] = True
 
 # round 0 accuracy
-# strategy = RandomSampling(X_tr, Y_tr, idxs_lb, args)
+strategy = RandomSampling(X_tr, Y_tr, idxs_lb, args)
 # strategy = LeastConfidence(X_tr, Y_tr, idxs_lb, args)
 # strategy = MarginSampling(X_tr, Y_tr, idxs_lb, args)
 # strategy = EntropySampling(X_tr, Y_tr, idxs_lb, args)
-strategy = LeastConfidenceDropout(X_tr, Y_tr, idxs_lb, args)
+# strategy = LeastConfidenceDropout(X_tr, Y_tr, idxs_lb, args)
 # strategy = MarginSamplingDropout(X_tr, Y_tr, idxs_lb, args)
 # strategy = EntropySamplingDropout(X_tr, Y_tr, idxs_lb, args)
 

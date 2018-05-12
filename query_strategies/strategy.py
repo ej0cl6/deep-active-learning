@@ -38,10 +38,10 @@ class Net(nn.Module):
         x = F.relu(F.max_pool2d(self.conv1(x), 2))
         x = F.relu(F.max_pool2d(self.conv2_drop(self.conv2(x)), 2))
         x = x.view(-1, 320)
-        x = F.relu(self.fc1(x))
-        x = F.dropout(x, training=self.training)
+        e1 = F.relu(self.fc1(x))
+        x = F.dropout(e1, training=self.training)
         x = self.fc2(x)
-        return F.log_softmax(x, dim=1)
+        return F.log_softmax(x, dim=1), e1
 
 class Strategy:
     def __init__(self, X, Y, idxs_lb, args):
@@ -64,7 +64,7 @@ class Strategy:
         for batch_idx, (x, y, idxs) in enumerate(loader_tr):
             x, y = x.to(self.device), y.to(self.device)
             optimizer.zero_grad()
-            p = self.clf(x)
+            p, e1 = self.clf(x)
             loss = F.nll_loss(p, y)
             loss.backward()
             optimizer.step()
@@ -90,7 +90,7 @@ class Strategy:
         with torch.no_grad():
             for x, y, idxs in loader_te:
                 x, y = x.to(self.device), y.to(self.device)
-                p = self.clf(x)
+                p, e1 = self.clf(x)
 
                 pred = p.max(1)[1]
                 P[idxs] = pred
@@ -106,7 +106,7 @@ class Strategy:
         with torch.no_grad():
             for x, y, idxs in loader_te:
                 x, y = x.to(self.device), y.to(self.device)
-                p = self.clf(x)
+                p, e1 = self.clf(x)
                 prob = torch.exp(p)
                 probs[idxs] = prob
         
@@ -123,7 +123,7 @@ class Strategy:
             with torch.no_grad():
                 for x, y, idxs in loader_te:
                     x, y = x.to(self.device), y.to(self.device)
-                    p = self.clf(x)
+                    p, e1 = self.clf(x)
                     log_probs[idxs] += p
         log_probs /= n_drop
         probs = torch.exp(log_probs)

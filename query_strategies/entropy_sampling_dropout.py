@@ -3,7 +3,7 @@ import torch
 from .strategy import Strategy
 
 class EntropySamplingDropout(Strategy):
-	def __init__(self, X, Y, idxs_lb, args, n_drop=10):
+	def __init__(self, X, Y, idxs_lb, args, n_drop=100):
 		super(EntropySamplingDropout, self).__init__(X, Y, idxs_lb, args)
 		self.n_drop = n_drop
 
