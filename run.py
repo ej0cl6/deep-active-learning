@@ -6,14 +6,7 @@ import torch.nn.functional as F
 import torch.optim as optim
 from torch.utils.data import Dataset, DataLoader
 from PIL import Image
-from query_strategies.random_sampling import RandomSampling
-from query_strategies.least_confidence import LeastConfidence
-from query_strategies.margin_sampling import MarginSampling
-from query_strategies.entropy_sampling import EntropySampling
-from query_strategies.least_confidence_dropout import LeastConfidenceDropout
-from query_strategies.margin_sampling_dropout import MarginSamplingDropout
-from query_strategies.entropy_sampling_dropout import EntropySamplingDropout
-
+from query_strategies import RandomSampling, LeastConfidence, MarginSampling, EntropySampling, LeastConfidenceDropout, MarginSamplingDropout, EntropySamplingDropout
 
 import ipdb
 

@@ -130,3 +130,19 @@ class Strategy:
         
         return probs
 
+    def get_embedding(self, X, Y):
+        loader_te = DataLoader(MyDataset(X, Y, transform=self.args['transform']),
+                            shuffle=False, **self.args['loader_te_args'])
+
+        self.clf.eval()
+        probs = torch.zeros([len(Y), len(np.unique(Y))])
+        with torch.no_grad():
+            for x, y, idxs in loader_te:
+                x, y = x.to(self.device), y.to(self.device)
+                p, e1 = self.clf(x)
+                ipdb.set_trace()
+                prob = torch.exp(p)
+                probs[idxs] = prob
+        
+        return probs
+
