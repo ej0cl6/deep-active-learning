@@ -6,7 +6,7 @@ import torch.nn.functional as F
 import torch.optim as optim
 from torch.utils.data import Dataset, DataLoader
 from PIL import Image
-from query_strategies import RandomSampling, LeastConfidence, MarginSampling, EntropySampling, LeastConfidenceDropout, MarginSamplingDropout, EntropySamplingDropout
+from query_strategies import RandomSampling, LeastConfidence, MarginSampling, EntropySampling, LeastConfidenceDropout, MarginSamplingDropout, EntropySamplingDropout, KMeansSampling
 
 import ipdb
 
@@ -55,13 +55,14 @@ idxs_lb = np.zeros(n_pool, dtype=bool)
 idxs_lb[np.random.randint(0, n_pool, NUM_INIT_LB)] = True
 
 # round 0 accuracy
-strategy = RandomSampling(X_tr, Y_tr, idxs_lb, args)
+# strategy = RandomSampling(X_tr, Y_tr, idxs_lb, args)
 # strategy = LeastConfidence(X_tr, Y_tr, idxs_lb, args)
 # strategy = MarginSampling(X_tr, Y_tr, idxs_lb, args)
 # strategy = EntropySampling(X_tr, Y_tr, idxs_lb, args)
 # strategy = LeastConfidenceDropout(X_tr, Y_tr, idxs_lb, args)
 # strategy = MarginSamplingDropout(X_tr, Y_tr, idxs_lb, args)
 # strategy = EntropySamplingDropout(X_tr, Y_tr, idxs_lb, args)
+strategy = KMeansSampling(X_tr, Y_tr, idxs_lb, args)
 
 strategy.train()
 print(type(strategy).__name__)

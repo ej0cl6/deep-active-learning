@@ -135,14 +135,12 @@ class Strategy:
                             shuffle=False, **self.args['loader_te_args'])
 
         self.clf.eval()
-        probs = torch.zeros([len(Y), len(np.unique(Y))])
+        embedding = torch.zeros([len(Y), self.clf.fc1.out_features])
         with torch.no_grad():
             for x, y, idxs in loader_te:
                 x, y = x.to(self.device), y.to(self.device)
                 p, e1 = self.clf(x)
-                ipdb.set_trace()
-                prob = torch.exp(p)
-                probs[idxs] = prob
+                embedding[idxs] = e1
         
-        return probs
+        return embedding
 
