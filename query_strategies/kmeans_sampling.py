@@ -7,10 +7,10 @@ class KMeansSampling(Strategy):
 		super(KMeansSampling, self).__init__(X, Y, idxs_lb, args)
 
 	def query(self, n):
-		idxs_unlabed = np.arange(self.n_pool)[~self.idxs_lb]
-		embedding = self.get_embedding(self.X[idxs_unlabed], self.Y[idxs_unlabed])
+		idxs_unlabeled = np.arange(self.n_pool)[~self.idxs_lb]
+		embedding = self.get_embedding(self.X[idxs_unlabeled], self.Y[idxs_unlabeled])
 		embedding = embedding.numpy()
 		cluster_learner = KMeans(n_clusters=n)
 		cluster_learner.fit(embedding)
 		distances = cluster_learner.transform(embedding)
-		return idxs_unlabed[distances.argmin(axis=0)]
+		return idxs_unlabeled[distances.argmin(axis=0)]

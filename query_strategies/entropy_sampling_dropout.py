@@ -8,8 +8,8 @@ class EntropySamplingDropout(Strategy):
 		self.n_drop = n_drop
 
 	def query(self, n):
-		idxs_unlabed = np.arange(self.n_pool)[~self.idxs_lb]
-		probs = self.predict_prob_dropout(self.X[idxs_unlabed], self.Y[idxs_unlabed], self.n_drop)
+		idxs_unlabeled = np.arange(self.n_pool)[~self.idxs_lb]
+		probs = self.predict_prob_dropout(self.X[idxs_unlabeled], self.Y[idxs_unlabeled], self.n_drop)
 		log_probs = torch.log(probs)
 		U = (probs*log_probs).sum(1)
-		return idxs_unlabed[U.sort()[1][:n]]
+		return idxs_unlabeled[U.sort()[1][:n]]
