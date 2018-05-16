@@ -6,7 +6,7 @@ import torch.nn.functional as F
 import torch.optim as optim
 from torch.utils.data import Dataset, DataLoader
 from PIL import Image
-from query_strategies import RandomSampling, LeastConfidence, MarginSampling, EntropySampling, LeastConfidenceDropout, MarginSamplingDropout, EntropySamplingDropout, KMeansSampling
+from query_strategies import RandomSampling, LeastConfidence, MarginSampling, EntropySampling, LeastConfidenceDropout, MarginSamplingDropout, EntropySamplingDropout, KMeansSampling, KCenterGreedy
 
 import ipdb
 
@@ -35,9 +35,11 @@ args = {'n_epoch': NUM_EPOCH, 'transform': TRANSFORM,
 np.random.seed(SEED)
 torch.manual_seed(SEED)
 
-# load mnist dataset
-raw_tr = datasets.MNIST('../data', train=True, download=True)
-raw_te = datasets.MNIST('../data', train=False, download=True)
+# load dataset
+raw_tr = datasets.MNIST('./MNIST', train=True, download=True)
+raw_te = datasets.MNIST('./MNIST', train=False, download=True)
+# raw_tr = datasets.FashionMNIST('./FashionMNIST', train=True, download=True)
+# raw_te = datasets.FashionMNIST('./FashionMNIST', train=False, download=True)
 X_tr = raw_tr.train_data
 Y_tr = raw_tr.train_labels
 X_te = raw_te.test_data
@@ -59,10 +61,11 @@ idxs_lb[np.random.randint(0, n_pool, NUM_INIT_LB)] = True
 # strategy = LeastConfidence(X_tr, Y_tr, idxs_lb, args)
 # strategy = MarginSampling(X_tr, Y_tr, idxs_lb, args)
 # strategy = EntropySampling(X_tr, Y_tr, idxs_lb, args)
-# strategy = LeastConfidenceDropout(X_tr, Y_tr, idxs_lb, args)
-# strategy = MarginSamplingDropout(X_tr, Y_tr, idxs_lb, args)
-# strategy = EntropySamplingDropout(X_tr, Y_tr, idxs_lb, args)
-strategy = KMeansSampling(X_tr, Y_tr, idxs_lb, args)
+# strategy = LeastConfidenceDropout(X_tr, Y_tr, idxs_lb, args, n_drop=100)
+# strategy = MarginSamplingDropout(X_tr, Y_tr, idxs_lb, args, n_drop=100)
+# strategy = EntropySamplingDropout(X_tr, Y_tr, idxs_lb, args, n_drop=100)
+# strategy = KMeansSampling(X_tr, Y_tr, idxs_lb, args)
+strategy = KCenterGreedy(X_tr, Y_tr, idxs_lb, args)
 
 strategy.train()
 print(type(strategy).__name__)
