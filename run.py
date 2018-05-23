@@ -6,12 +6,12 @@ import torch.nn.functional as F
 import torch.optim as optim
 from torch.utils.data import Dataset, DataLoader
 from PIL import Image
-from query_strategies import RandomSampling, LeastConfidence, MarginSampling, EntropySampling, LeastConfidenceDropout, MarginSamplingDropout, EntropySamplingDropout, KMeansSampling, KCenterGreedy
+from query_strategies import RandomSampling, LeastConfidence, MarginSampling, EntropySampling, LeastConfidenceDropout, MarginSamplingDropout, EntropySamplingDropout, KMeansSampling, KCenterGreedy, BALDDropout
 
 import ipdb
 
 # parameters
-SEED = 1
+SEED = 5
 
 NUM_INIT_LB = 100
 NUM_QUERY = 100
@@ -65,7 +65,8 @@ idxs_lb[np.random.randint(0, n_pool, NUM_INIT_LB)] = True
 # strategy = MarginSamplingDropout(X_tr, Y_tr, idxs_lb, args, n_drop=100)
 # strategy = EntropySamplingDropout(X_tr, Y_tr, idxs_lb, args, n_drop=100)
 # strategy = KMeansSampling(X_tr, Y_tr, idxs_lb, args)
-strategy = KCenterGreedy(X_tr, Y_tr, idxs_lb, args)
+# strategy = KCenterGreedy(X_tr, Y_tr, idxs_lb, args)
+strategy = BALDDropout(X_tr, Y_tr, idxs_lb, args, n_drop=100)
 
 strategy.train()
 print(type(strategy).__name__)

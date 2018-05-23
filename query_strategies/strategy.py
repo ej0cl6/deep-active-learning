@@ -130,6 +130,22 @@ class Strategy:
         
         return probs
 
+    def predict_prob_dropout_split(self, X, Y, n_drop):
+        loader_te = DataLoader(MyDataset(X, Y, transform=self.args['transform']),
+                            shuffle=False, **self.args['loader_te_args'])
+
+        self.clf.train()
+        probs = torch.zeros([n_drop, len(Y), len(np.unique(Y))])
+        for i in range(n_drop):
+            print('n_drop {}/{}'.format(i+1, n_drop))
+            with torch.no_grad():
+                for x, y, idxs in loader_te:
+                    x, y = x.to(self.device), y.to(self.device)
+                    p, e1 = self.clf(x)
+                    probs[i][idxs] += torch.exp(p)
+        
+        return probs
+
     def get_embedding(self, X, Y):
         loader_te = DataLoader(MyDataset(X, Y, transform=self.args['transform']),
                             shuffle=False, **self.args['loader_te_args'])
