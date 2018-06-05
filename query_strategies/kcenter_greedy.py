@@ -8,12 +8,11 @@ class KCenterGreedy(Strategy):
 
 	def query(self, n):
 		idxs_lb_copy = self.idxs_lb.copy()
+		embedding = self.get_embedding(self.X, self.Y)
+		embedding = embedding.numpy()
 		for i in range(n):
-			print('n_center {}/{}'.format(i+1, n))
 			idxs_lb = np.arange(self.n_pool)[idxs_lb_copy]
 			idxs_ub = np.arange(self.n_pool)[~idxs_lb_copy]
-			embedding = self.get_embedding(self.X, self.Y)
-			embedding = embedding.numpy()
 			embedding_lb = embedding[idxs_lb]
 			embedding_ub = embedding[idxs_ub]
 

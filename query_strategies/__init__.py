@@ -8,3 +8,8 @@ from .entropy_sampling_dropout import EntropySamplingDropout
 from .kmeans_sampling import KMeansSampling
 from .kcenter_greedy import KCenterGreedy
 from .bayesian_active_learning_disagreement_dropout import BALDDropout
+from .local_intrinsic_dimensionality import LIDSingle
+from .local_intrinsic_dimensionality_label import LIDSingleLabel
+from .local_intrinsic_dimensionality_label2 import LIDSingleLabel2
+from .embedding_distance import EmbeddingDistance
+from .embedding_distance_label import EmbeddingDistanceLabel

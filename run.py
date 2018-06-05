@@ -6,12 +6,12 @@ import torch.nn.functional as F
 import torch.optim as optim
 from torch.utils.data import Dataset, DataLoader
 from PIL import Image
-from query_strategies import RandomSampling, LeastConfidence, MarginSampling, EntropySampling, LeastConfidenceDropout, MarginSamplingDropout, EntropySamplingDropout, KMeansSampling, KCenterGreedy, BALDDropout
+from query_strategies import RandomSampling, LeastConfidence, MarginSampling, EntropySampling, LeastConfidenceDropout, MarginSamplingDropout, EntropySamplingDropout, KMeansSampling, KCenterGreedy, BALDDropout, LIDSingle, LIDSingleLabel, LIDSingleLabel2, EmbeddingDistance, EmbeddingDistanceLabel
 
 import ipdb
 
 # parameters
-SEED = 5
+SEED = 1
 
 NUM_INIT_LB = 100
 NUM_QUERY = 100
@@ -54,22 +54,29 @@ print('number of testing pool: {}'.format(n_test))
 
 # generate initial label
 idxs_lb = np.zeros(n_pool, dtype=bool)
-idxs_lb[np.random.randint(0, n_pool, NUM_INIT_LB)] = True
+idxs_tmp = np.arange(n_pool)
+np.random.shuffle(idxs_tmp)
+idxs_lb[idxs_tmp[:NUM_INIT_LB]] = True
 
 # round 0 accuracy
-# strategy = RandomSampling(X_tr, Y_tr, idxs_lb, args)
+strategy = RandomSampling(X_tr, Y_tr, idxs_lb, args)
 # strategy = LeastConfidence(X_tr, Y_tr, idxs_lb, args)
 # strategy = MarginSampling(X_tr, Y_tr, idxs_lb, args)
 # strategy = EntropySampling(X_tr, Y_tr, idxs_lb, args)
-# strategy = LeastConfidenceDropout(X_tr, Y_tr, idxs_lb, args, n_drop=100)
-# strategy = MarginSamplingDropout(X_tr, Y_tr, idxs_lb, args, n_drop=100)
-# strategy = EntropySamplingDropout(X_tr, Y_tr, idxs_lb, args, n_drop=100)
+# strategy = LeastConfidenceDropout(X_tr, Y_tr, idxs_lb, args, n_drop=10)
+# strategy = MarginSamplingDropout(X_tr, Y_tr, idxs_lb, args, n_drop=10)
+# strategy = EntropySamplingDropout(X_tr, Y_tr, idxs_lb, args, n_drop=10)
 # strategy = KMeansSampling(X_tr, Y_tr, idxs_lb, args)
 # strategy = KCenterGreedy(X_tr, Y_tr, idxs_lb, args)
-strategy = BALDDropout(X_tr, Y_tr, idxs_lb, args, n_drop=100)
+# strategy = BALDDropout(X_tr, Y_tr, idxs_lb, args, n_drop=10)
+# strategy = LIDSingle(X_tr, Y_tr, idxs_lb, args, k=40)
+# strategy = LIDSingleLabel(X_tr, Y_tr, idxs_lb, args, k=20)
+# strategy = LIDSingleLabel2(X_tr, Y_tr, idxs_lb, args, k=20)
+# strategy = EmbeddingDistance(X_tr, Y_tr, idxs_lb, args, k=20)
+# strategy = EmbeddingDistanceLabel(X_tr, Y_tr, idxs_lb, args, k=1)
 
-strategy.train()
 print(type(strategy).__name__)
+strategy.train()
 P = strategy.predict(X_te, Y_te)
 acc = np.zeros(NUM_ROUND+1)
 acc[0] = 1.0 * (Y_te==P).sum().item() / len(Y_te)
