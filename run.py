@@ -1,11 +1,7 @@
 import numpy as np
 from torchvision import datasets, transforms
 import torch
-import torch.nn as nn
-import torch.nn.functional as F
-import torch.optim as optim
-from torch.utils.data import Dataset, DataLoader
-from PIL import Image
+from datetime import datetime
 from query_strategies import RandomSampling, LeastConfidence, MarginSampling, EntropySampling, LeastConfidenceDropout, MarginSamplingDropout, EntropySamplingDropout, KMeansSampling, KCenterGreedy, BALDDropout, LIDSingle, LIDSingleLabel, LIDSingleLabel2, EmbeddingDistance, EmbeddingDistanceLabel
 
 import ipdb
@@ -81,11 +77,16 @@ P = strategy.predict(X_te, Y_te)
 acc = np.zeros(NUM_ROUND+1)
 acc[0] = 1.0 * (Y_te==P).sum().item() / len(Y_te)
 print('Round 0\ntesting accuracy {}'.format(acc[0]))
+T = np.zeros(NUM_ROUND)
 
 for rd in range(1, NUM_ROUND+1):
     print('Round {}'.format(rd))
 
+    t_start = datetime.now()
     q_idxs = strategy.query(NUM_QUERY)
+    t_end = datetime.now()
+    T[rd-1] = (t_end - t_start).total_seconds()
+
     idxs_lb[q_idxs] = True
     strategy.update(idxs_lb)
     strategy.train()
@@ -94,4 +95,6 @@ for rd in range(1, NUM_ROUND+1):
     print('testing accuracy {}'.format(acc[rd]))
 
 print(type(strategy).__name__)
+print(T)
+print(T.mean())
 print(acc)
