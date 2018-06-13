@@ -13,23 +13,15 @@ NUM_INIT_LB = 100
 NUM_QUERY = 100
 NUM_ROUND = 10
 
-NUM_EPOCH = 25
-BATCH_SIZE_TR = 10
-BATCH_SIZE_TE = 1000
-NUM_WORKER = 1
-LEARNING_RATE = 0.01
-MOMENTUM = 0.5
-
-TRANSFORM = transforms.Compose([transforms.ToTensor(),transforms.Normalize((0.1307,), (0.3081,))])
-
-args = {'n_epoch': NUM_EPOCH, 'transform': TRANSFORM,
-        'loader_tr_args':{'batch_size': BATCH_SIZE_TR, 'num_workers': NUM_WORKER},
-        'loader_te_args':{'batch_size': BATCH_SIZE_TE, 'num_workers': NUM_WORKER},
-        'optimizer_args':{'lr': LEARNING_RATE, 'momentum': MOMENTUM}}
+args = {'n_epoch': 25, 'transform': transforms.Compose([transforms.ToTensor(),transforms.Normalize((0.1307,), (0.3081,))]),
+        'loader_tr_args':{'batch_size': 10, 'num_workers': 1},
+        'loader_te_args':{'batch_size': 1000, 'num_workers': 1},
+        'optimizer_args':{'lr': 0.01, 'momentum': 0.5}}
 
 # set seed
 np.random.seed(SEED)
 torch.manual_seed(SEED)
+torch.backends.cudnn.enabled = False
 
 # load dataset
 raw_tr = datasets.MNIST('./MNIST', train=True, download=True)
@@ -54,7 +46,6 @@ idxs_tmp = np.arange(n_pool)
 np.random.shuffle(idxs_tmp)
 idxs_lb[idxs_tmp[:NUM_INIT_LB]] = True
 
-# round 0 accuracy
 strategy = RandomSampling(X_tr, Y_tr, idxs_lb, args)
 # strategy = LeastConfidence(X_tr, Y_tr, idxs_lb, args)
 # strategy = MarginSampling(X_tr, Y_tr, idxs_lb, args)
