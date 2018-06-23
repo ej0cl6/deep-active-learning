@@ -2,19 +2,19 @@ import numpy as np
 from torchvision import datasets, transforms
 import torch
 from datetime import datetime
-from query_strategies import RandomSampling, LeastConfidence, MarginSampling, EntropySampling, LeastConfidenceDropout, MarginSamplingDropout, EntropySamplingDropout, KMeansSampling, KCenterGreedy, BALDDropout, LIDSingle, LIDSingleLabel, LIDSingleLabel2, EmbeddingDistance, EmbeddingDistanceLabel
+from query_strategies import RandomSampling, LeastConfidence, MarginSampling, EntropySampling, LeastConfidenceDropout, MarginSamplingDropout, EntropySamplingDropout, KMeansSampling, KCenterGreedy, BALDDropout, CoreSet
 
 import ipdb
 
 # parameters
-SEED = 1
+SEED = 4
 
-NUM_INIT_LB = 100
-NUM_QUERY = 100
+NUM_INIT_LB = 10000
+NUM_QUERY = 1000
 NUM_ROUND = 10
 
-args = {'n_epoch': 25, 'transform': transforms.Compose([transforms.ToTensor(),transforms.Normalize((0.1307,), (0.3081,))]),
-        'loader_tr_args':{'batch_size': 10, 'num_workers': 1},
+args = {'n_epoch': 10, 'transform': transforms.Compose([transforms.ToTensor(),transforms.Normalize((0.1307,), (0.3081,))]),
+        'loader_tr_args':{'batch_size': 64, 'num_workers': 1},
         'loader_te_args':{'batch_size': 1000, 'num_workers': 1},
         'optimizer_args':{'lr': 0.01, 'momentum': 0.5}}
 
@@ -28,8 +28,8 @@ raw_tr = datasets.MNIST('./MNIST', train=True, download=True)
 raw_te = datasets.MNIST('./MNIST', train=False, download=True)
 # raw_tr = datasets.FashionMNIST('./FashionMNIST', train=True, download=True)
 # raw_te = datasets.FashionMNIST('./FashionMNIST', train=False, download=True)
-X_tr = raw_tr.train_data
-Y_tr = raw_tr.train_labels
+X_tr = raw_tr.train_data[:40000]
+Y_tr = raw_tr.train_labels[:40000]
 X_te = raw_te.test_data
 Y_te = raw_te.test_labels
 
@@ -46,7 +46,7 @@ idxs_tmp = np.arange(n_pool)
 np.random.shuffle(idxs_tmp)
 idxs_lb[idxs_tmp[:NUM_INIT_LB]] = True
 
-strategy = RandomSampling(X_tr, Y_tr, idxs_lb, args)
+# strategy = RandomSampling(X_tr, Y_tr, idxs_lb, args)
 # strategy = LeastConfidence(X_tr, Y_tr, idxs_lb, args)
 # strategy = MarginSampling(X_tr, Y_tr, idxs_lb, args)
 # strategy = EntropySampling(X_tr, Y_tr, idxs_lb, args)
@@ -56,11 +56,8 @@ strategy = RandomSampling(X_tr, Y_tr, idxs_lb, args)
 # strategy = KMeansSampling(X_tr, Y_tr, idxs_lb, args)
 # strategy = KCenterGreedy(X_tr, Y_tr, idxs_lb, args)
 # strategy = BALDDropout(X_tr, Y_tr, idxs_lb, args, n_drop=10)
-# strategy = LIDSingle(X_tr, Y_tr, idxs_lb, args, k=40)
-# strategy = LIDSingleLabel(X_tr, Y_tr, idxs_lb, args, k=20)
-# strategy = LIDSingleLabel2(X_tr, Y_tr, idxs_lb, args, k=20)
-# strategy = EmbeddingDistance(X_tr, Y_tr, idxs_lb, args, k=20)
-# strategy = EmbeddingDistanceLabel(X_tr, Y_tr, idxs_lb, args, k=1)
+strategy = CoreSet(X_tr, Y_tr, idxs_lb, args)
+
 
 print(type(strategy).__name__)
 strategy.train()

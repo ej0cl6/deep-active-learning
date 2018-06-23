@@ -26,6 +26,8 @@ class KCenterGreedy(Strategy):
 		mat = dist_mat[~lb_flag, :][:, lb_flag]
 
 		for i in range(n):
+			if i%10 == 0:
+				print('greedy solution {}/{}'.format(i, n))
 			mat_min = mat.min(axis=1)
 			q_idx_ = mat_min.argmax()
 			q_idx = np.arange(self.n_pool)[~lb_flag][q_idx_]
