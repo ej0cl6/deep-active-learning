@@ -2,12 +2,15 @@ import numpy as np
 from torchvision import datasets, transforms
 import torch
 from datetime import datetime
-from query_strategies import RandomSampling, LeastConfidence, MarginSampling, EntropySampling, LeastConfidenceDropout, MarginSamplingDropout, EntropySamplingDropout, KMeansSampling, KCenterGreedy, BALDDropout, CoreSet
+from query_strategies import RandomSampling, LeastConfidence, MarginSampling, EntropySampling, \
+                                LeastConfidenceDropout, MarginSamplingDropout, EntropySamplingDropout, \
+                                KMeansSampling, KCenterGreedy, BALDDropout, CoreSet, \
+                                AdversarialBIM
 
 import ipdb
 
 # parameters
-SEED = 4
+SEED = 3
 
 NUM_INIT_LB = 10000
 NUM_QUERY = 1000
@@ -56,7 +59,8 @@ idxs_lb[idxs_tmp[:NUM_INIT_LB]] = True
 # strategy = KMeansSampling(X_tr, Y_tr, idxs_lb, args)
 # strategy = KCenterGreedy(X_tr, Y_tr, idxs_lb, args)
 # strategy = BALDDropout(X_tr, Y_tr, idxs_lb, args, n_drop=10)
-strategy = CoreSet(X_tr, Y_tr, idxs_lb, args)
+# strategy = CoreSet(X_tr, Y_tr, idxs_lb, args)
+strategy = AdversarialBIM(X_tr, Y_tr, idxs_lb, args, eps=0.03)
 
 
 print(type(strategy).__name__)
