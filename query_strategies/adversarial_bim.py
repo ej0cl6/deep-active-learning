@@ -4,7 +4,7 @@ import torch.nn.functional as F
 from .strategy import Strategy, MyDataset
 
 class AdversarialBIM(Strategy):
-	def __init__(self, X, Y, idxs_lb, args, eps=0.03):
+	def __init__(self, X, Y, idxs_lb, args, eps=0.05):
 		super(AdversarialBIM, self).__init__(X, Y, idxs_lb, args)
 		self.eps = eps
 
