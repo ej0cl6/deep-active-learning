@@ -14,9 +14,9 @@ class AdversarialBIM(Strategy):
 		eta = torch.zeros(nx.shape)
 
 		out, e1 = self.clf(nx+eta)
-		np = out.max(1)[1]
+		py = out.max(1)[1]
 		ny = out.max(1)[1]
-		while np.item() == ny.item():
+		while py.item() == ny.item():
 			loss = F.cross_entropy(out, ny)
 			loss.backward()
 
@@ -24,7 +24,7 @@ class AdversarialBIM(Strategy):
 			nx.grad.data.zero_()
 
 			out, e1 = self.clf(nx+eta)
-			np = out.max(1)[1]
+			py = out.max(1)[1]
 
 		return (eta*eta).sum()
 
