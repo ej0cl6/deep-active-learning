@@ -5,7 +5,7 @@ from datetime import datetime
 from query_strategies import RandomSampling, LeastConfidence, MarginSampling, EntropySampling, \
                                 LeastConfidenceDropout, MarginSamplingDropout, EntropySamplingDropout, \
                                 KMeansSampling, KCenterGreedy, BALDDropout, CoreSet, \
-                                AdversarialBIM
+                                AdversarialBIM, AdversarialDeepFool
 
 import ipdb
 
@@ -60,7 +60,8 @@ idxs_lb[idxs_tmp[:NUM_INIT_LB]] = True
 # strategy = KCenterGreedy(X_tr, Y_tr, idxs_lb, args)
 # strategy = BALDDropout(X_tr, Y_tr, idxs_lb, args, n_drop=10)
 # strategy = CoreSet(X_tr, Y_tr, idxs_lb, args)
-strategy = AdversarialBIM(X_tr, Y_tr, idxs_lb, args, eps=0.05)
+# strategy = AdversarialBIM(X_tr, Y_tr, idxs_lb, args, eps=0.05)
+strategy = AdversarialDeepFool(X_tr, Y_tr, idxs_lb, args, max_iter=50)
 
 
 print(type(strategy).__name__)
