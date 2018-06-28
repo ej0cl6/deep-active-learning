@@ -1,8 +1,6 @@
 import numpy as np
 from .strategy import Strategy
 from sklearn.neighbors import NearestNeighbors
-from ortools.constraint_solver import pywrapcp
-from ortools.linear_solver import pywraplp
 import pickle
 from datetime import datetime
 
@@ -55,8 +53,11 @@ class CoreSet(Strategy):
 
 		pickle.dump((xx.tolist(), yy.tolist(), dd.tolist(), subset, float(opt), n, self.n_pool), open('mip.pkl', 'wb'), 2)
 
-		# run gurobi to solve MIP problem
-		# sh gurobi.sh < core_set_sovle_solve.py
+		import ipdb
+		ipdb.set_trace()
+		# solving MIP
+		# download Gurobi software from http://www.gurobi.com/
+		# sh {GUROBI_HOME}/linux64/bin/gurobi.sh < core_set_sovle_solve.py
 
 		sols = pickle.load(open('sols.pkl', 'rb'))
 

@@ -49,7 +49,7 @@ idxs_tmp = np.arange(n_pool)
 np.random.shuffle(idxs_tmp)
 idxs_lb[idxs_tmp[:NUM_INIT_LB]] = True
 
-# strategy = RandomSampling(X_tr, Y_tr, idxs_lb, args)
+strategy = RandomSampling(X_tr, Y_tr, idxs_lb, args)
 # strategy = LeastConfidence(X_tr, Y_tr, idxs_lb, args)
 # strategy = MarginSampling(X_tr, Y_tr, idxs_lb, args)
 # strategy = EntropySampling(X_tr, Y_tr, idxs_lb, args)
@@ -61,7 +61,7 @@ idxs_lb[idxs_tmp[:NUM_INIT_LB]] = True
 # strategy = BALDDropout(X_tr, Y_tr, idxs_lb, args, n_drop=10)
 # strategy = CoreSet(X_tr, Y_tr, idxs_lb, args)
 # strategy = AdversarialBIM(X_tr, Y_tr, idxs_lb, args, eps=0.05)
-strategy = AdversarialDeepFool(X_tr, Y_tr, idxs_lb, args, max_iter=50)
+# strategy = AdversarialDeepFool(X_tr, Y_tr, idxs_lb, args, max_iter=50)
 
 
 print(type(strategy).__name__)
