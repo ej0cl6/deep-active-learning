@@ -11,7 +11,20 @@ Python implementations of the following active learning algorithms:
 - K-Means Sampling [3]
 - K-Centers Greedy [3]
 - Core-Set [3]
-- Adversarial - Basic Iterative Method [4]
+- Adversarial - Basic Iterative Method
+- Adversarial - DeepFool [4]
+
+### Prerequisites 
+- numpy            1.14.3
+- scipy            1.1.0
+- pytorch          0.4.0
+- torchvision      0.2.1
+- scikit-learn     0.19.1
+- ipdb             0.11
+
+### Usage 
+
+    $ python run.py
 
 ### Reference
 
