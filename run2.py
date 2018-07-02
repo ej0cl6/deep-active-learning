@@ -10,13 +10,13 @@ from query_strategies import RandomSampling, LeastConfidence, MarginSampling, En
 import ipdb
 
 # parameters
-SEED = 3
+SEED = 1
 
 NUM_INIT_LB = 10000
 NUM_QUERY = 1000
 NUM_ROUND = 10
 
-args = {'n_epoch': 10, 'transform': transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.1307,), (0.3081,))]),
+args = {'n_epoch': 20, 'transform': transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.4377, 0.4438, 0.4728), (0.1980, 0.2010, 0.1970))]),
         'loader_tr_args':{'batch_size': 64, 'num_workers': 1},
         'loader_te_args':{'batch_size': 1000, 'num_workers': 1},
         'optimizer_args':{'lr': 0.01, 'momentum': 0.5}}
@@ -27,14 +27,13 @@ torch.manual_seed(SEED)
 torch.backends.cudnn.enabled = False
 
 # load dataset
-raw_tr = datasets.MNIST('./MNIST', train=True, download=True)
-raw_te = datasets.MNIST('./MNIST', train=False, download=True)
-# raw_tr = datasets.FashionMNIST('./FashionMNIST', train=True, download=True)
-# raw_te = datasets.FashionMNIST('./FashionMNIST', train=False, download=True)
-X_tr = raw_tr.train_data[:40000]
-Y_tr = raw_tr.train_labels[:40000]
-X_te = raw_te.test_data
-Y_te = raw_te.test_labels
+data_tr = datasets.SVHN('./SVHN', split='train', download=True)
+data_te = datasets.SVHN('./SVHN', split='test', download=True)
+
+X_tr = data_tr.data[:40000]
+Y_tr = torch.from_numpy(data_tr.labels)[:40000]
+X_te = data_te.data
+Y_te = torch.from_numpy(data_te.labels)
 
 # start experiment
 n_pool = len(Y_tr)
@@ -49,7 +48,7 @@ idxs_tmp = np.arange(n_pool)
 np.random.shuffle(idxs_tmp)
 idxs_lb[idxs_tmp[:NUM_INIT_LB]] = True
 
-# strategy = RandomSampling(X_tr, Y_tr, idxs_lb, args)
+strategy = RandomSampling(X_tr, Y_tr, idxs_lb, args)
 # strategy = LeastConfidence(X_tr, Y_tr, idxs_lb, args)
 # strategy = MarginSampling(X_tr, Y_tr, idxs_lb, args)
 # strategy = EntropySampling(X_tr, Y_tr, idxs_lb, args)
@@ -61,7 +60,7 @@ idxs_lb[idxs_tmp[:NUM_INIT_LB]] = True
 # strategy = BALDDropout(X_tr, Y_tr, idxs_lb, args, n_drop=10)
 # strategy = CoreSet(X_tr, Y_tr, idxs_lb, args)
 # strategy = AdversarialBIM(X_tr, Y_tr, idxs_lb, args, eps=0.05)
-strategy = AdversarialDeepFool(X_tr, Y_tr, idxs_lb, args, max_iter=50)
+# strategy = AdversarialDeepFool(X_tr, Y_tr, idxs_lb, args, max_iter=50)
 
 print('SEED {}'.format(SEED))
 print(type(strategy).__name__)
