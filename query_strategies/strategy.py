@@ -17,9 +17,9 @@ class MyDataset(Dataset):
     def __getitem__(self, index):
         x, y = self.X[index], self.Y[index]
         if self.transform is not None:
-            # x = Image.fromarray(x.numpy(), mode='L')
+            x = Image.fromarray(x.numpy(), mode='L')
             # x = Image.fromarray(np.transpose(x, (1, 2, 0)))
-            x = Image.fromarray(x)
+            # x = Image.fromarray(x)
             x = self.transform(x)
 
         return x, y, index
@@ -114,9 +114,9 @@ class Strategy:
 
     def train(self):
         n_epoch = self.args['n_epoch']
-        # self.clf = Net().to(self.device)
+        self.clf = Net().to(self.device)
         # self.clf = Net2().to(self.device)
-        self.clf = Net3().to(self.device)
+        # self.clf = Net3().to(self.device)
         optimizer = optim.SGD(self.clf.parameters(), **self.args['optimizer_args'])
 
         idxs_train = np.arange(self.n_pool)[self.idxs_lb]

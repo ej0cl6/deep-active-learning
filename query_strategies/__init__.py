@@ -11,3 +11,4 @@ from .bayesian_active_learning_disagreement_dropout import BALDDropout
 from .core_set import CoreSet
 from .adversarial_bim import AdversarialBIM
 from .adversarial_deepfool import AdversarialDeepFool
+from .active_learning_by_learning import ActiveLearningByLearning

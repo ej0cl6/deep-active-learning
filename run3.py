@@ -5,12 +5,12 @@ from datetime import datetime
 from query_strategies import RandomSampling, LeastConfidence, MarginSampling, EntropySampling, \
                                 LeastConfidenceDropout, MarginSamplingDropout, EntropySamplingDropout, \
                                 KMeansSampling, KCenterGreedy, BALDDropout, CoreSet, \
-                                AdversarialBIM, AdversarialDeepFool
+                                AdversarialBIM, AdversarialDeepFool, ActiveLearningByLearning
 
 import ipdb
 
 # parameters
-SEED = 1
+SEED = 5
 
 NUM_INIT_LB = 10000
 NUM_QUERY = 1000
@@ -48,7 +48,7 @@ idxs_tmp = np.arange(n_pool)
 np.random.shuffle(idxs_tmp)
 idxs_lb[idxs_tmp[:NUM_INIT_LB]] = True
 
-strategy = RandomSampling(X_tr, Y_tr, idxs_lb, args)
+# strategy = RandomSampling(X_tr, Y_tr, idxs_lb, args)
 # strategy = LeastConfidence(X_tr, Y_tr, idxs_lb, args)
 # strategy = MarginSampling(X_tr, Y_tr, idxs_lb, args)
 # strategy = EntropySampling(X_tr, Y_tr, idxs_lb, args)
@@ -61,6 +61,9 @@ strategy = RandomSampling(X_tr, Y_tr, idxs_lb, args)
 # strategy = CoreSet(X_tr, Y_tr, idxs_lb, args)
 # strategy = AdversarialBIM(X_tr, Y_tr, idxs_lb, args, eps=0.05)
 # strategy = AdversarialDeepFool(X_tr, Y_tr, idxs_lb, args, max_iter=50)
+albl_list = [MarginSampling(X_tr, Y_tr, idxs_lb, args),
+             KMeansSampling(X_tr, Y_tr, idxs_lb, args)]
+strategy = ActiveLearningByLearning(X_tr, Y_tr, idxs_lb, args, strategy_list=albl_list, delta=0.1)
 
 print('SEED {}'.format(SEED))
 print(type(strategy).__name__)
