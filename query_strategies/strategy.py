@@ -67,6 +67,25 @@ class Net2(nn.Module):
         x = self.fc3(x)
         return x, e1
 
+class Net3(nn.Module):
+    def __init__(self):
+        super(Net3, self).__init__()
+        self.conv1 = nn.Conv2d(3, 32, kernel_size=5)
+        self.conv2 = nn.Conv2d(32, 32, kernel_size=5)
+        self.conv3 = nn.Conv2d(32, 64, kernel_size=5)
+        self.fc1 = nn.Linear(1024, 50)
+        self.fc2 = nn.Linear(50, 10)
+
+    def forward(self, x):
+        x = F.relu(self.conv1(x))
+        x = F.relu(F.max_pool2d(self.conv2(x), 2))
+        x = F.relu(F.max_pool2d(self.conv3(x), 2))
+        x = x.view(-1, 1024)
+        e1 = F.relu(self.fc1(x))
+        x = F.dropout(e1, training=self.training)
+        x = self.fc2(x)
+        return x, e1
+
 class Strategy:
     def __init__(self, X, Y, idxs_lb, args):
         self.X = X
@@ -96,7 +115,8 @@ class Strategy:
     def train(self):
         n_epoch = self.args['n_epoch']
         # self.clf = Net().to(self.device)
-        self.clf = Net2().to(self.device)
+        # self.clf = Net2().to(self.device)
+        self.clf = Net3().to(self.device)
         optimizer = optim.SGD(self.clf.parameters(), **self.args['optimizer_args'])
 
         idxs_train = np.arange(self.n_pool)[self.idxs_lb]

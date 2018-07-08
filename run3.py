@@ -19,7 +19,7 @@ NUM_ROUND = 10
 args = {'n_epoch': 20, 'transform': transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2470, 0.2435, 0.2616))]),
         'loader_tr_args':{'batch_size': 64, 'num_workers': 1},
         'loader_te_args':{'batch_size': 1000, 'num_workers': 1},
-        'optimizer_args':{'lr': 0.01, 'momentum': 0.5}}
+        'optimizer_args':{'lr': 0.05, 'momentum': 0.3}}
 
 # set seed
 np.random.seed(SEED)
@@ -30,8 +30,8 @@ torch.backends.cudnn.enabled = False
 data_tr = datasets.CIFAR10('./CIFAR10', train=True, download=True)
 data_te = datasets.CIFAR10('./CIFAR10', train=False, download=True)
 
-X_tr = data_tr.train_data
-Y_tr = torch.from_numpy(np.array(data_tr.train_labels))
+X_tr = data_tr.train_data[:40000]
+Y_tr = torch.from_numpy(np.array(data_tr.train_labels))[:40000]
 X_te = data_te.test_data
 Y_te = torch.from_numpy(np.array(data_te.test_labels))
 
