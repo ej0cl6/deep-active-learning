@@ -1,11 +1,11 @@
 import numpy as np
 import torch
 import torch.nn.functional as F
-from .strategy import Strategy, MyDataset
+from .strategy import Strategy
 
 class AdversarialDeepFool(Strategy):
-    def __init__(self, X, Y, idxs_lb, args, max_iter=50):
-        super(AdversarialDeepFool, self).__init__(X, Y, idxs_lb, args)
+    def __init__(self, X, Y, idxs_lb, net, handler, args, max_iter=50):
+        super(AdversarialDeepFool, self).__init__(X, Y, idxs_lb, net, handler, args)
         self.max_iter = max_iter
 
     def cal_dis(self, x):
@@ -56,7 +56,7 @@ class AdversarialDeepFool(Strategy):
         self.clf.eval()
         dis = np.zeros(idxs_unlabeled.shape)
 
-        data_pool = MyDataset(self.X[idxs_unlabeled], self.Y[idxs_unlabeled], transform=self.args['transform'])
+        data_pool = self.handler(self.X[idxs_unlabeled], self.Y[idxs_unlabeled], transform=self.args['transform'])
         for i in range(len(idxs_unlabeled)):
             if i % 100 == 0:
                 print('adv {}/{}'.format(i, len(idxs_unlabeled)))

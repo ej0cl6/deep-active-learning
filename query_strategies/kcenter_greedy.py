@@ -3,8 +3,8 @@ from .strategy import Strategy
 from sklearn.neighbors import NearestNeighbors
 
 class KCenterGreedy(Strategy):
-	def __init__(self, X, Y, idxs_lb, args):
-		super(KCenterGreedy, self).__init__(X, Y, idxs_lb, args)
+	def __init__(self, X, Y, idxs_lb, net, handler, args):
+		super(KCenterGreedy, self).__init__(X, Y, idxs_lb, net, handler, args)
 
 	def query(self, n):
 		lb_flag = self.idxs_lb.copy()

@@ -3,8 +3,8 @@ from .strategy import Strategy
 from .random_sampling import RandomSampling
 
 class ActiveLearningByLearning(Strategy):
-	def __init__(self, X, Y, idxs_lb, args, strategy_list, delta = 0.1):
-		super(ActiveLearningByLearning, self).__init__(X, Y, idxs_lb, args)
+	def __init__(self, X, Y, idxs_lb, net, handler, args, strategy_list, delta = 0.1):
+		super(ActiveLearningByLearning, self).__init__(X, Y, idxs_lb, net, handler, args)
 		self.strategy_list = strategy_list
 		self.strategy_list.append(RandomSampling(X, Y, idxs_lb, args))
 		self.n_strategy = len(self.strategy_list)

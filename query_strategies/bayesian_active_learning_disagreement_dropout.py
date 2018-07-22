@@ -3,8 +3,8 @@ import torch
 from .strategy import Strategy
 
 class BALDDropout(Strategy):
-	def __init__(self, X, Y, idxs_lb, args, n_drop=100):
-		super(BALDDropout, self).__init__(X, Y, idxs_lb, args)
+	def __init__(self, X, Y, idxs_lb, net, handler, args, n_drop=10):
+		super(BALDDropout, self).__init__(X, Y, idxs_lb, net, handler, args)
 		self.n_drop = n_drop
 
 	def query(self, n):
