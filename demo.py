@@ -22,8 +22,7 @@ parser.add_argument('--strategy_name', type=str, default="RandomSampling",
                              "KCenterGreedy", 
                              "BALDDropout", 
                              "AdversarialBIM", 
-                             "AdversarialDeepFool", 
-                             "ActiveLearningByLearning"], help="algorithm strategy")
+                             "AdversarialDeepFool"], help="query strategy")
 args = parser.parse_args()
 pprint(vars(args))
 print()
