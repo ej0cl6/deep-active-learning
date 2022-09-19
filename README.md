@@ -8,7 +8,7 @@ Python implementations of the following active learning algorithms:
 - Entropy Sampling [3]
 - Uncertainty Sampling with Dropout Estimation [4]
 - Bayesian Active Learning Disagreement [4]
-- Core-Set Selection [5]
+- Cluster-Based Selection [5]
 - Adversarial margin [6]
 
 ## Prerequisites 
