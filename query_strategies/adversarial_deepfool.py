@@ -41,6 +41,7 @@ class AdversarialDeepFool(Strategy):
 
                 if value_i < value_l:
                     ri = value_i/np.linalg.norm(wi.numpy().flatten()) * wi
+                    value_l = value_i
 
             eta += ri.clone()
             nx.grad.data.zero_()
